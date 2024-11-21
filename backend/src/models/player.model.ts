@@ -2,7 +2,7 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 
-export class player extends Model {
+export class Player extends Model {
   public id!: number;
   public username!: string;
   public password!: string;
@@ -11,7 +11,7 @@ export class player extends Model {
   public updatedAt!: Date;
 }
 
-player.init(
+Player.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -48,4 +48,4 @@ player.init(
   }
 );
 
-export default player;
+export default Player;

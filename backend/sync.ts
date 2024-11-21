@@ -1,14 +1,14 @@
 import sequelize from './src/config/database'; // Connexion Sequelize
-import { player } from './src/models/player.model'; // Importer les modèles
+import { Player } from './src/models/player.model'; // Importer les modèles
 import { Game } from './src/models/game.model';
 import { Piece } from './src/models/piece.model';
 import { Move } from './src/models/move.model';
 
 // Associer les modèles entre eux si nécessaire
-player.hasMany(Game, { foreignKey: 'whitePlayerId' });
-player.hasMany(Game, { foreignKey: 'blackPlayerId' });
-Game.belongsTo(player, { foreignKey: 'whitePlayerId' });
-Game.belongsTo(player, { foreignKey: 'blackPlayerId' });
+Player.hasMany(Game, { foreignKey: 'whitePlayerId' });
+Player.hasMany(Game, { foreignKey: 'blackPlayerId' });
+Game.belongsTo(Player, { foreignKey: 'whitePlayerId' });
+Game.belongsTo(Player, { foreignKey: 'blackPlayerId' });
 
 Game.hasMany(Piece, { foreignKey: 'gameId' });
 Piece.belongsTo(Game, { foreignKey: 'gameId' });
