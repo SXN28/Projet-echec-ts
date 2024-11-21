@@ -1,11 +1,12 @@
-import { Sequelize } from "sequelize";
+import { Sequelize } from 'sequelize';
 
+// Spécifie le chemin relatif correct pour accéder à data.sqlite
 const sequelize = new Sequelize({
-  dialect: "sqlite",
+  dialect: 'sqlite',
   define: {
-    timestamps: false,
+    timestamps: false, // Optionnel, si tu ne veux pas de colonnes `createdAt` et `updatedAt`
   },
-  storage: "./library.sqlite", // Chemin vers la base SQLite
+  storage: './data.sqlite', // Cela doit pointer vers ton fichier `data.sqlite`
 });
 
 export default sequelize;
