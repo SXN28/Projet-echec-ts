@@ -40,25 +40,6 @@ export class PlayerService {
             notFound("Player");
         }
     }
-
-    // Met à jour un joueur
-    public async updatePlayer(
-        id: number,
-        username?: string,
-        email?: string,
-        password?: string,
-    ): Promise<PlayerOutputDTO> {
-        const player = await Player.findByPk(id);
-        if (player) {
-            if (username) player.username = username;
-            if (email) player.email = email;
-            if (password) player.password = password;
-            await player.save();
-            return PlayerMapper.toOutputDto(player);
-        } else {
-            notFound("Player");
-        }
-    }
 }
 
 export const playerService = new PlayerService();

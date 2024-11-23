@@ -43,13 +43,4 @@ export class PlayerController extends Controller {
         await playerService.deletePlayer(id);
     }
 
-    // Met à jour un joueur par ID
-    @Patch("{id}")
-    public async updatePlayer(
-        @Path() id: number,
-        @Body() requestBody: PlayerInputPatchDTO,
-    ): Promise<PlayerOutputDTO> {
-        const { username, email, password } = requestBody;
-        return playerService.updatePlayer(id, username, email, password);
-    }
 }

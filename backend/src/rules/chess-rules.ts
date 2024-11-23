@@ -1,40 +1,61 @@
-import { Board } from "../models/board.model";
 import { Move } from "../models/move.model";
 
-export function isValidMove(board: Board, move: Move, pieceType: string, color: 'white' | 'black'): boolean {
-    const positions = board.getPositions();
-    const piece = positions[move.fromRow][move.fromCol];
+export function isValidMove(board: any[][], move: Move, pieceType: string, color: 'white' | 'black'): boolean {
+
+    const piece = board[move.fromRow][move.fromCol];
 
     if (!piece) {
         return false;
     }
 
     switch (pieceType) {
-        case 'pawn':
-            return isValidPawnMove(positions, move, color);
+        case 'P':
+            return isValidPawnMove(board, move, color);
         case 'king':
-            return isValidKingMove(positions, move);
+            return isValidKingMove(board, move);
         default:
             return false;
     }
 }
 
-function isValidPawnMove(positions: string[][], move: Move, color: 'white' | 'black'): boolean {
-    const start = positions[move.fromRow][move.fromCol];
-    const end = positions[move.toRow][move.toCol];
-
+function isValidPawnMove(board: any[][], move: Move, color: 'white' | 'black'): boolean {
+    console.log("isValidePawn");
     const direction = color === 'white' ? -1 : 1;
+    const end = board[move.toRow][move.toCol];
 
+    // Déplacement simple d'une case
     if (move.toRow === move.fromRow + direction && move.toCol === move.fromCol && !end) {
         return true;
     }
 
-    return move.toRow === move.fromRow + direction && Math.abs(move.toCol - move.fromCol) === 1;
+    // Déplacement initial de deux cases
+    if (
+        move.fromRow === (color === 'white' ? 6 : 1) &&
+        move.toRow === move.fromRow + 2 * direction &&
+        move.toCol === move.fromCol &&
+        !end &&
+        !board[move.fromRow + direction][move.fromCol]
+    ) {
+        return true;
+    }
 
+    // Prise diagonale
+    if (
+        move.toRow === move.fromRow + direction &&
+        Math.abs(move.toCol - move.fromCol) === 1 &&
+        end &&
+        end.color !== color
+    ) {
+        return true;
+    }
 
+    return false;
 }
 
-function isValidKingMove(positions: string[][], move: Move): boolean {
+
+
+
+function isValidKingMove(board: any[][], move: Move): boolean {
     const rowDiff = Math.abs(move.toRow - move.fromRow);
     const colDiff = Math.abs(move.toCol - move.fromCol);
 
