@@ -183,39 +183,21 @@
 						"type": "number",
 						"format": "double"
 					},
-					"from": {
-						"properties": {
-							"col": {
-								"type": "number",
-								"format": "double"
-							},
-							"row": {
-								"type": "number",
-								"format": "double"
-							}
-						},
-						"required": [
-							"col",
-							"row"
-						],
-						"type": "object"
+					"fromRow": {
+						"type": "number",
+						"format": "double"
 					},
-					"to": {
-						"properties": {
-							"col": {
-								"type": "number",
-								"format": "double"
-							},
-							"row": {
-								"type": "number",
-								"format": "double"
-							}
-						},
-						"required": [
-							"col",
-							"row"
-						],
-						"type": "object"
+					"fromCol": {
+						"type": "number",
+						"format": "double"
+					},
+					"toRow": {
+						"type": "number",
+						"format": "double"
+					},
+					"toCol": {
+						"type": "number",
+						"format": "double"
 					},
 					"playerColor": {
 						"type": "string",
@@ -227,8 +209,10 @@
 				},
 				"required": [
 					"gameId",
-					"from",
-					"to",
+					"fromRow",
+					"fromCol",
+					"toRow",
+					"toCol",
 					"playerColor"
 				],
 				"type": "object",
@@ -593,29 +577,6 @@
 			}
 		},
 		"/moves": {
-			"get": {
-				"operationId": "GetAllMoves",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/MoveOutputDTO"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Moves"
-				],
-				"security": [],
-				"parameters": []
-			},
 			"post": {
 				"operationId": "MakeMove",
 				"responses": {

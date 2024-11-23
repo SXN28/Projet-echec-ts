@@ -1,9 +1,12 @@
 export interface MoveInputDTO {
     gameId: number;
-    from: { row: number; col: number };
-    to: { row: number; col: number };
+    fromRow: number;
+    fromCol: number;
+    toRow: number;
+    toCol: number;
     playerColor: "white" | "black";
 }
+
 
 export interface MoveOutputDTO {
     gameId: number;

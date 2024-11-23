@@ -11,7 +11,12 @@ export class Move extends Model {
     public toRow!: number;
     public toCol!: number;
     public createdAt!: Date;
+
+    public static createTemporaryMove(data: Partial<Move>): Move {
+        return Move.build(data, { isNewRecord: true });
+    }
 }
+
 
 Move.init(
     {
