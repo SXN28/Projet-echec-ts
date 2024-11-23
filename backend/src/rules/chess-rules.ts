@@ -20,8 +20,14 @@ export function isValidMove(board: any[][], move: Move, pieceType: string, color
 
 function isValidPawnMove(board: any[][], move: Move, color: 'white' | 'black'): boolean {
     console.log("isValidePawn");
-    const direction = color === 'white' ? -1 : 1;
+    const direction = color === 'white' ? 1 : -1;
     const end = board[move.toRow][move.toCol];
+
+    console.log(move.toRow);
+    console.log(move.fromRow);
+    console.log(move.toCol);
+    console.log(move.fromCol);
+
 
     // Déplacement simple d'une case
     if (move.toRow === move.fromRow + direction && move.toCol === move.fromCol && !end) {
