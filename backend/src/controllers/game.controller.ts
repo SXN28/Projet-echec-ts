@@ -3,7 +3,7 @@ import {
     Post,
     Body,
     Route,
-    Tags, Delete, Path,
+    Tags, Delete, Path, Get,
 } from "tsoa";
 import {GameService} from "../services/game.service";
 import {GameInputDTO, GameOutputDTO} from "../dto/game.dto";
@@ -18,7 +18,6 @@ export class GameController extends Controller {
     ): Promise<GameOutputDTO> {
         const {whitePlayerId, blackPlayerId} = requestBody;
 
-        // Appel au service pour créer une nouvelle partie
         return GameService.createGame(whitePlayerId, blackPlayerId);
     }
 
@@ -27,5 +26,12 @@ export class GameController extends Controller {
         @Path() gameId: number
     ): Promise<void>{
         await GameService.deleteGame(gameId);
+    }
+
+    @Get("/{gameId}")
+    public async getGame(
+        @Path() gameId: number
+    ): Promise<GameOutputDTO> {
+        return GameService.getGame(gameId);
     }
 }

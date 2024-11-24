@@ -71,6 +71,22 @@ export class GameService {
 
         await game.destroy();
     }
+
+    static async getGame(gameId: number): Promise<GameOutputDTO> {
+        const game = await Game.findByPk(gameId);
+
+        if (!game) {
+            throw new Error(`Game with ID ${gameId} does not exist.`);
+        }
+
+        return {
+            gameId: game.id,
+            whitePlayerId: game.whitePlayerId,
+            blackPlayerId: game.blackPlayerId,
+            board: game.board,
+            status: game.status,
+        };
+    }
 }
 
 export const gameService = new GameService();

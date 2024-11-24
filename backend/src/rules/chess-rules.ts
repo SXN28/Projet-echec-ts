@@ -11,7 +11,7 @@ export function isValidMove(board: any[][], move: Move, pieceType: string, color
     switch (pieceType) {
         case 'P':
             return isValidPawnMove(board, move, color);
-        case 'king':
+        case 'K':
             return isValidKingMove(board, move);
         default:
             return false;
@@ -22,11 +22,6 @@ function isValidPawnMove(board: any[][], move: Move, color: 'white' | 'black'): 
     console.log("isValidePawn");
     const direction = color === 'white' ? 1 : -1;
     const end = board[move.toRow][move.toCol];
-
-    console.log(move.toRow);
-    console.log(move.fromRow);
-    console.log(move.toCol);
-    console.log(move.fromCol);
 
 
     // Déplacement simple d'une case
@@ -54,6 +49,7 @@ function isValidPawnMove(board: any[][], move: Move, color: 'white' | 'black'): 
     ) {
         return true;
     }
+    
 
     return false;
 }
