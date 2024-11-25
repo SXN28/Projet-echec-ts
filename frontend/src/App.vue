@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <h1>Jeu d'Échecs</h1>
     <ChessBoard />
   </div>
 </template>
