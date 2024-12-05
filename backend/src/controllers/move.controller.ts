@@ -17,21 +17,28 @@ export class MoveController extends Controller {
 
     @Post("/")
     public async makeMove(@Body() requestBody: MoveInputDTO): Promise<MoveOutputDTO> {
-        const { gameId, fromRow, fromCol, toRow, toCol, playerColor } = requestBody;
+        try {
+            const { gameId, fromRow, fromCol, toRow, toCol, playerColor } = requestBody;
 
+         const move = Move.createTemporaryMove({
+                gameId,
+                fromRow,
+                fromCol,
+                toRow,
+                toCol,
+                playerId: 0,
+                createdAt: new Date(),
+            });
 
-        const move = Move.createTemporaryMove({
-            gameId,
-            fromRow,
-            fromCol,
-            toRow,
-            toCol,
-            playerId: 0,
-            createdAt: new Date(),
-        });
+            return moveService.makeMove(gameId, move, playerColor);
 
-        // Appel du service
-        return moveService.makeMove(gameId, move, playerColor);
+        } catch (error: any) {
+            const statusCode = error.status || 500;
+            const message = error.message || "Internal Server Error";
+        
+            this.setStatus(statusCode);
+            throw { status: statusCode, message };
+          } 
 
     }
 }

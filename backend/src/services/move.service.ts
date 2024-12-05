@@ -9,39 +9,35 @@ export class MoveService {
         move: Move,
         playerColor: "white" | "black"
     ): Promise<MoveOutputDTO> {
+        const game = await Game.findByPk(gameId);
 
-
-        const board = await this.getGame(gameId);
-
-        if (!board) {
-            throw new Error(`Game with ID ${gameId} not found or invalid board.`);
+        if (!game) {
+            throw { status: 404, message: `Game with ID ${gameId} not found.` };
         }
 
-        const piece = board[move.fromRow][move.fromCol];
+        if (game.turn !== playerColor) {
+            throw { status: 400, message: `It's not your turn! It's ${game.turn}'s turn.` };
+        }
+
+        const board = JSON.parse(game.board || "[]");
+        const piece = board[move.fromRow]?.[move.fromCol];
+
         if (!piece || piece.color !== playerColor) {
-            throw new Error("Invalid move: No piece at the position or wrong player.");
+            throw { status: 400, message: "Invalid move: No piece at the position or wrong player." };
         }
-
 
         const isValid = isValidMove(board, move, piece.piece, piece.color);
         if (!isValid) {
-            throw new Error("Invalid move.");
+            throw { status: 400, message: "Invalid move." };
         }
 
-        // 2. Appliquer le mouvement
+        // Applique le mouvement
         board[move.toRow][move.toCol] = board[move.fromRow][move.fromCol];
         board[move.fromRow][move.fromCol] = null;
-
-        // 3. Sauvegarder le plateau mis à jour
-        const game = await Game.findByPk(gameId);
-        if (!game) {
-            throw new Error("Game not found.");
-        }
 
         game.board = JSON.stringify(board);
         await game.save();
 
-        // 4. Enregistrer le mouvement
         const createdMove = await Move.create({
             gameId,
             playerId: playerColor === "white" ? game.whitePlayerId : game.blackPlayerId,
@@ -51,7 +47,6 @@ export class MoveService {
             toCol: move.toCol,
         });
 
-        // 5. Retourner les résultats
         return {
             gameId,
             from: { row: move.fromRow, col: move.fromCol },
@@ -60,23 +55,7 @@ export class MoveService {
             board: JSON.stringify(board),
         };
     }
-
-
-    public async getGame(gameId: number): Promise<any[][] | null> {
-        const game = await Game.findByPk(gameId);
-
-        if (!game) {
-            console.log("Jeu non trouvé");
-            return null;
-        }
-
-        try {
-            return JSON.parse(game.board);
-        } catch (error) {
-            console.error("Erreur de parsing JSON", error);
-            return null;
-        }
-    }
 }
+
 
 export const moveService = new MoveService();

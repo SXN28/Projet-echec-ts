@@ -222,6 +222,9 @@
 					},
 					"status": {
 						"type": "string"
+					},
+					"turn": {
+						"type": "string"
 					}
 				},
 				"required": [
@@ -229,7 +232,8 @@
 					"whitePlayerId",
 					"blackPlayerId",
 					"board",
-					"status"
+					"status",
+					"turn"
 				],
 				"type": "object",
 				"additionalProperties": false

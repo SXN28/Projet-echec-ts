@@ -5,7 +5,7 @@ import { GameOutputDTO } from "../dto/game.dto";
 export class GameService {
 
     static async createGame(whitePlayerId: number, blackPlayerId: number): Promise<GameOutputDTO> {
-        // Vérifiez que les joueurs existent dans la base de données
+
         const whitePlayer = await Player.findByPk(whitePlayerId);
         const blackPlayer = await Player.findByPk(blackPlayerId);
 
@@ -44,7 +44,6 @@ export class GameService {
         ];
 
 
-        // Créez un nouveau jeu
         const game = await Game.create({
             whitePlayerId,
             blackPlayerId,
@@ -59,6 +58,7 @@ export class GameService {
             blackPlayerId: game.blackPlayerId,
             board: game.board,
             status: game.status,
+            turn: game.turn,
         };
     }
 
@@ -85,6 +85,7 @@ export class GameService {
             blackPlayerId: game.blackPlayerId,
             board: game.board,
             status: game.status,
+            turn: game.turn,
         };
     }
 }
