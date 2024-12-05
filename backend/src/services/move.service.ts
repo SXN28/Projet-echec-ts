@@ -2,6 +2,9 @@ import { Move } from "../models/move.model";
 import { Game } from "../models/game.model";
 import { isValidMove } from "../rules/chess-rules";
 import { MoveOutputDTO } from "../dto/move.dto";
+import errorHandler from "../middlewares/errorHandler"
+import {notFound} from "../error/NotFoundError";
+import {invalidMoveError, turnMoveError} from "../error/TurnMoveError";
 
 export class MoveService {
     public async makeMove(
@@ -12,12 +15,12 @@ export class MoveService {
         const game = await Game.findByPk(gameId);
 
         if (!game) {
-            throw { status: 404, message: `Game with ID ${gameId} not found.` };
+            notFound("game");
         }
 
-        if (game.turn !== playerColor) {
-            throw { status: 400, message: `It's not your turn! It's ${game.turn}'s turn.` };
-        }
+        /*if (game.turn !== playerColor) {
+            turnMoveError(game.turn);
+        }*/
 
         const board = JSON.parse(game.board || "[]");
         const piece = board[move.fromRow]?.[move.fromCol];
@@ -28,7 +31,7 @@ export class MoveService {
 
         const isValid = isValidMove(board, move, piece.piece, piece.color);
         if (!isValid) {
-            throw { status: 400, message: "Invalid move." };
+            invalidMoveError();
         }
 
         // Applique le mouvement
