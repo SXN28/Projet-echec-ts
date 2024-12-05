@@ -18,7 +18,7 @@ import pawnBlack from "@/assets/chess-pieces/pawn_b.png";
 let board = ref([]);
 let currentTurn = ref("white");
 let selectedPiece = ref<{ row: number; col: number } | null>(null);
-let gameId = ref(15);
+let gameId = ref(16);
 let playerColor = ref("black");
 
 type PieceType = "K" | "Q" | "R" | "B" | "N" | "P";
@@ -85,29 +85,27 @@ function allowDrop(event: Event) {
   event.preventDefault();
 }
 
-function onDrop(targetRow: number, targetCol: number) {
+async function onDrop(targetRow: number, targetCol: number) {
   if (!selectedPiece.value) return;
 
   const { row, col } = selectedPiece.value;
 
-  axios
+  let res = await axios
       .post(`http://localhost:8000/moves`, {
         gameId: gameId.value,
         fromRow: row,
         fromCol: col,
         toRow: targetRow,
         toCol: targetCol,
-        playerColor: playerColor.value,
-      })
-      .then(() => {
-        loadBoard();
-        selectedPiece.value = null;
-      })
-      .catch((error) => {
-        console.error("Erreur lors du déplacement :", error);
-        selectedPiece.value = null;
+        playerColor: board.value[row][col].color,
       });
-}
+  if(res.status === 200){
+    loadBoard()
+  } else {
+    res.status
+    res.data["message"]
+  }
+} 
 </script>
 
 <template>
