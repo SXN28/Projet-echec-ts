@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import {ref, onMounted} from "vue";
 
 import kingWhite from "@/assets/chess-pieces/king_w.png";
 import queenWhite from "@/assets/chess-pieces/queen_w.png";
@@ -18,7 +18,7 @@ import pawnBlack from "@/assets/chess-pieces/pawn_b.png";
 let board = ref([]);
 let currentTurn = ref("white");
 let selectedPiece = ref<{ row: number; col: number } | null>(null);
-let gameId = ref(16);
+let gameId = ref(71);
 let playerColor = ref("black");
 
 type PieceType = "K" | "Q" | "R" | "B" | "N" | "P";
@@ -44,7 +44,7 @@ function loadBoard() {
       });
 }
 
-function getPieceImage(cell: { color: string; piece: string }) : any {
+function getPieceImage(cell: { color: string; piece: string }): any {
   const pieceImages = {
     white: {
       K: kingWhite,
@@ -66,8 +66,9 @@ function getPieceImage(cell: { color: string; piece: string }) : any {
 
   return pieceImages[cell.color][cell.piece];
 }
+
 function onDragStart(rowIndex: number, colIndex: number) {
-  selectedPiece.value = { row: rowIndex, col: colIndex };
+  selectedPiece.value = {row: rowIndex, col: colIndex};
 }
 
 function getCurrentTurn() {
@@ -88,7 +89,19 @@ function allowDrop(event: Event) {
 async function onDrop(targetRow: number, targetCol: number) {
   if (!selectedPiece.value) return;
 
-  const { row, col } = selectedPiece.value;
+  const {row, col} = selectedPiece.value;
+
+  const requestPayload = {
+    gameId: gameId.value,
+    fromRow: row,
+    fromCol: col,
+    toRow: targetRow,
+    toCol: targetCol,
+    playerColor: board.value[row][col].color,
+  };
+
+  // Afficher la requête dans la console
+  console.log("Requête envoyée:", requestPayload);
 
   let res = await axios
       .post(`http://localhost:8000/moves`, {
@@ -99,16 +112,47 @@ async function onDrop(targetRow: number, targetCol: number) {
         toCol: targetCol,
         playerColor: board.value[row][col].color,
       });
-  if(res.status === 200){
+  if (res.status === 200) {
     loadBoard()
   } else {
     res.status
     res.data["message"]
   }
-} 
+}
+
+async function createNewGame() {
+  try {
+    gameId.value++;
+
+    const payload = {
+      whitePlayerId: 1,
+      blackPlayerId: 2,
+    };
+    const response = await axios.post("http://localhost:8000/games", payload);
+
+    if (response.status === 200) {
+      console.log("Nouvelle partie créée avec succès :", response.data);
+      await axios.delete(`http://localhost:8000/games/${gameId.value-1}`);
+      await loadBoard();
+    } else {
+      console.error("Erreur inattendue :", response.data);
+    }
+  } catch (error: any) {
+    if (error.response) {
+      console.error("Erreur lors de la création de la partie :", error.response.data);
+    } else {
+      console.error("Erreur de connexion au backend :", error.message);
+    }
+  }
+}
+
+
 </script>
 
 <template>
+  <div>
+    <button @click="createNewGame">Créer une nouvelle partie</button>
+  </div>
   <div class="chessboard">
 
     <div class="controls">
