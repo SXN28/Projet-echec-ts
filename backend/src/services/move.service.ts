@@ -18,9 +18,9 @@ export class MoveService {
             notFound("game");
         }
 
-        /*if (game.turn !== playerColor) {
+        if (game.turn !== playerColor) {
             turnMoveError(game.turn);
-        }*/
+        }
 
         const board = JSON.parse(game.board || "[]");
         const piece = board[move.fromRow]?.[move.fromCol];
@@ -37,6 +37,8 @@ export class MoveService {
         // Applique le mouvement
         board[move.toRow][move.toCol] = board[move.fromRow][move.fromCol];
         board[move.fromRow][move.fromCol] = null;
+
+        game.turn = playerColor === "white" ? "black" : "white";
 
         game.board = JSON.stringify(board);
         await game.save();
