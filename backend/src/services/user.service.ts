@@ -4,13 +4,11 @@ import { UserMapper } from "../mapper/user.mapper";
 import { User } from "../models/user.model";
 
 export class UserService {
-  // Récupère tous les utilisateurs
   public async getAllUsers(): Promise<UserOutputDTO[]> {
     let userList = await User.findAll();
     return UserMapper.toOutputDtoList(userList);
   }
 
-  // Récupère un utilisateur par ID
   public async getUserById(id: number): Promise<UserOutputDTO> {
     let user = await User.findByPk(id);
     if (user) {
@@ -20,17 +18,17 @@ export class UserService {
     }
   }
 
-  // Crée un nouvel utilisateur
-  public async createUser(
-    username: string,
-    password: string,
-  ): Promise<UserOutputDTO> {
-    return UserMapper.toOutputDto(
-      await User.create({ username: username, password: password }),
-    );
+  public async createUser(username: string, password: string): Promise<UserOutputDTO> {
+    const encodedPassword = Buffer.from(password, "utf-8").toString("base64");
+
+    const newUser = await User.create({
+      username,
+      password: encodedPassword,
+    });
+    return UserMapper.toOutputDto(newUser);
   }
 
-  // Supprime un utilisateur par ID
+
   public async deleteUser(id: number): Promise<void> {
     const user = await User.findByPk(id);
     if (user) {
@@ -40,7 +38,6 @@ export class UserService {
     }
   }
 
-  // Met à jour un utilisateur
   public async updateUser(
     id: number,
     username?: string,

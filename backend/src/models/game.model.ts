@@ -1,6 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
-import Player from './player.model';
 
 
 export class Game extends Model {

@@ -6,8 +6,6 @@ import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserController } from './../controllers/user.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { PlayerController } from './../controllers/player.controller';
-// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MoveController } from './../controllers/move.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { GameController } from './../controllers/game.controller';
@@ -47,28 +45,6 @@ const models: TsoaRoute.Models = {
         "properties": {
             "username": {"dataType":"string"},
             "password": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "PlayerOutputDTO": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "username": {"dataType":"string","required":true},
-            "email": {"dataType":"string","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "updatedAt": {"dataType":"datetime","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "PlayerInputDTO": {
-        "dataType": "refObject",
-        "properties": {
-            "username": {"dataType":"string","required":true},
-            "email": {"dataType":"string","required":true},
-            "password": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -159,20 +135,19 @@ export function RegisterRoutes(app: Router) {
 
 
     
+        const argsUserController_getAllUsers: Record<string, TsoaRoute.ParameterSchema> = {
+        };
         app.get('/users',
-            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(UserController)),
             ...(fetchMiddlewares<RequestHandler>(UserController.prototype.getAllUsers)),
 
             async function UserController_getAllUsers(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-            };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsUserController_getAllUsers, request, response });
 
                 const controller = new UserController();
 
@@ -189,21 +164,20 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsUserController_getUserById: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"double"},
+        };
         app.get('/users/:id',
-            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(UserController)),
             ...(fetchMiddlewares<RequestHandler>(UserController.prototype.getUserById)),
 
             async function UserController_getUserById(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-            };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsUserController_getUserById, request, response });
 
                 const controller = new UserController();
 
@@ -220,21 +194,20 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsUserController_createUser: Record<string, TsoaRoute.ParameterSchema> = {
+                requestBody: {"in":"body","name":"requestBody","required":true,"ref":"UserInputDTO"},
+        };
         app.post('/users',
-            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(UserController)),
             ...(fetchMiddlewares<RequestHandler>(UserController.prototype.createUser)),
 
             async function UserController_createUser(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"UserInputDTO"},
-            };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsUserController_createUser, request, response });
 
                 const controller = new UserController();
 
@@ -251,21 +224,20 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsUserController_deleteUser: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"double"},
+        };
         app.delete('/users/:id',
-            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(UserController)),
             ...(fetchMiddlewares<RequestHandler>(UserController.prototype.deleteUser)),
 
             async function UserController_deleteUser(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-            };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsUserController_deleteUser, request, response });
 
                 const controller = new UserController();
 
@@ -282,22 +254,22 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsUserController_updateUser: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                requestBody: {"in":"body","name":"requestBody","required":true,"ref":"UserInputPatchDTO"},
+        };
         app.patch('/users/:id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(UserController)),
             ...(fetchMiddlewares<RequestHandler>(UserController.prototype.updateUser)),
 
             async function UserController_updateUser(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"UserInputPatchDTO"},
-            };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsUserController_updateUser, request, response });
 
                 const controller = new UserController();
 
@@ -314,139 +286,20 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/players',
-            ...(fetchMiddlewares<RequestHandler>(PlayerController)),
-            ...(fetchMiddlewares<RequestHandler>(PlayerController.prototype.getAllPlayers)),
-
-            async function PlayerController_getAllPlayers(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new PlayerController();
-
-              await templateService.apiHandler({
-                methodName: 'getAllPlayers',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/players/:id',
-            ...(fetchMiddlewares<RequestHandler>(PlayerController)),
-            ...(fetchMiddlewares<RequestHandler>(PlayerController.prototype.getPlayerById)),
-
-            async function PlayerController_getPlayerById(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new PlayerController();
-
-              await templateService.apiHandler({
-                methodName: 'getPlayerById',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/players',
-            ...(fetchMiddlewares<RequestHandler>(PlayerController)),
-            ...(fetchMiddlewares<RequestHandler>(PlayerController.prototype.createPlayer)),
-
-            async function PlayerController_createPlayer(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"PlayerInputDTO"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new PlayerController();
-
-              await templateService.apiHandler({
-                methodName: 'createPlayer',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/players/:id',
-            ...(fetchMiddlewares<RequestHandler>(PlayerController)),
-            ...(fetchMiddlewares<RequestHandler>(PlayerController.prototype.deletePlayer)),
-
-            async function PlayerController_deletePlayer(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new PlayerController();
-
-              await templateService.apiHandler({
-                methodName: 'deletePlayer',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMoveController_makeMove: Record<string, TsoaRoute.ParameterSchema> = {
+                requestBody: {"in":"body","name":"requestBody","required":true,"ref":"MoveInputDTO"},
+        };
         app.post('/moves',
             ...(fetchMiddlewares<RequestHandler>(MoveController)),
             ...(fetchMiddlewares<RequestHandler>(MoveController.prototype.makeMove)),
 
             async function MoveController_makeMove(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"MoveInputDTO"},
-            };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsMoveController_makeMove, request, response });
 
                 const controller = new MoveController();
 
@@ -463,20 +316,20 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMoveController_getMovesByGameId: Record<string, TsoaRoute.ParameterSchema> = {
+                gameId: {"in":"path","name":"gameId","required":true,"dataType":"double"},
+        };
         app.get('/moves/game/:gameId',
             ...(fetchMiddlewares<RequestHandler>(MoveController)),
             ...(fetchMiddlewares<RequestHandler>(MoveController.prototype.getMovesByGameId)),
 
             async function MoveController_getMovesByGameId(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    gameId: {"in":"path","name":"gameId","required":true,"dataType":"double"},
-            };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsMoveController_getMovesByGameId, request, response });
 
                 const controller = new MoveController();
 
@@ -493,20 +346,20 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsGameController_createGame: Record<string, TsoaRoute.ParameterSchema> = {
+                requestBody: {"in":"body","name":"requestBody","required":true,"ref":"GameInputDTO"},
+        };
         app.post('/games',
             ...(fetchMiddlewares<RequestHandler>(GameController)),
             ...(fetchMiddlewares<RequestHandler>(GameController.prototype.createGame)),
 
             async function GameController_createGame(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"GameInputDTO"},
-            };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsGameController_createGame, request, response });
 
                 const controller = new GameController();
 
@@ -523,20 +376,20 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsGameController_deleteGame: Record<string, TsoaRoute.ParameterSchema> = {
+                gameId: {"in":"path","name":"gameId","required":true,"dataType":"double"},
+        };
         app.delete('/games/:gameId',
             ...(fetchMiddlewares<RequestHandler>(GameController)),
             ...(fetchMiddlewares<RequestHandler>(GameController.prototype.deleteGame)),
 
             async function GameController_deleteGame(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    gameId: {"in":"path","name":"gameId","required":true,"dataType":"double"},
-            };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsGameController_deleteGame, request, response });
 
                 const controller = new GameController();
 
@@ -553,20 +406,20 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsGameController_getGame: Record<string, TsoaRoute.ParameterSchema> = {
+                gameId: {"in":"path","name":"gameId","required":true,"dataType":"double"},
+        };
         app.get('/games/:gameId',
             ...(fetchMiddlewares<RequestHandler>(GameController)),
             ...(fetchMiddlewares<RequestHandler>(GameController.prototype.getGame)),
 
             async function GameController_getGame(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    gameId: {"in":"path","name":"gameId","required":true,"dataType":"double"},
-            };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsGameController_getGame, request, response });
 
                 const controller = new GameController();
 
@@ -583,20 +436,20 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAuthenticationController_authenticate: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"AuthenticationInputDTO"},
+        };
         app.post('/auth',
             ...(fetchMiddlewares<RequestHandler>(AuthenticationController)),
             ...(fetchMiddlewares<RequestHandler>(AuthenticationController.prototype.authenticate)),
 
             async function AuthenticationController_authenticate(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    body: {"in":"body","name":"body","required":true,"ref":"AuthenticationInputDTO"},
-            };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsAuthenticationController_authenticate, request, response });
 
                 const controller = new AuthenticationController();
 

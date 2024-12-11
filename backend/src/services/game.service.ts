@@ -1,4 +1,4 @@
-import { Player } from '../models/player.model'; // Import du modèle Player
+import { User } from '../models/user.model';
 import { Game } from '../models/game.model';
 import { GameOutputDTO } from "../dto/game.dto";
 
@@ -6,8 +6,8 @@ export class GameService {
 
     static async createGame(whitePlayerId: number, blackPlayerId: number): Promise<GameOutputDTO> {
 
-        const whitePlayer = await Player.findByPk(whitePlayerId);
-        const blackPlayer = await Player.findByPk(blackPlayerId);
+        const whitePlayer = await User.findByPk(whitePlayerId);
+        const blackPlayer = await User.findByPk(blackPlayerId);
 
         if (!whitePlayer || !blackPlayer) {
             throw new Error('One or both players do not exist.');

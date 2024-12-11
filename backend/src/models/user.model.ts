@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import sequelize from "../config/database"; // Connexion à la base de données
+import sequelize from "../config/database";
 export interface UserAttributes {
   id?: number;
   username: string;
