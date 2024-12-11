@@ -38,15 +38,16 @@ const handleMoveMade = () => {
 <style scoped>
 
 #side {
-  width: 20vw;
-  height: 100vh;
+  width: max-content;
+  height: max-content;
+  margin: 0;
+  padding: 0;
 }
 
 #chess {
-  width: 80vw;
-  height: 100vh;
+  width: max-content;
+  height: max-content;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  margin-right: 100px;
 }
 </style>

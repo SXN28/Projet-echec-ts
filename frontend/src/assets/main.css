@@ -1,35 +1,145 @@
 @import './base.css';
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
-}
+@media (min-width: 1200px) {
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
   body {
     display: flex;
     place-items: center;
+    flex-direction: row;
+    font-family: 'Poppins';
+    background-color: #333;
+  }
+
+  .app {
+    width: 100vw;
   }
 
   #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    display: flex;
   }
+
+  .navbar {
+    width: 15vw;
+    height: 100vh;
+    background-color: #111111;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0px 20px;
+  }
+  
+  .navbar ul {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    margin-top: 50px;
+  }
+  
+  .navbar ul li {
+    margin-bottom: 40px;
+    width: 100%;
+  }
+  
+  .navbar a {
+    color: rgb(196, 196, 196);
+    text-decoration: none;
+    font-size: 20px;
+    width: 100%;
+  }
+  
+  .navbar ul li a:hover {
+    color: white;
+  }
+
+  .navbar .btn-play {
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    bottom: 50px;
+  }
+
+  .main-content {
+    margin-left: 15vw;
+    height: 100vh;
+    width: 85vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .play {
+    padding: 15px 36px;
+    background-color: green;
+    border-radius: 10px;
+    width: max-content;
+    transition-duration: 300ms;
+    font-size: 20px;
+  }
+
+  .play:hover {
+    background-color: rgb(3, 150, 3);
+    color: white;
+  }
+
+  .navbar .btn-nav {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    box-sizing: border-box;
+  }
+
+  .navbar .btn-nav a {
+    padding: 10px 0px;
+    border-radius: 12px;
+  }
+
+  .navbar .register {
+    position: relative;
+    overflow: hidden;
+    color: rgb(196, 196, 196);
+    border: 2px solid grey;
+    text-align: center;
+    transition: color 300ms ease;
+    z-index: 1;
+  }
+
+  .navbar .register::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: grey;
+    z-index: -1;
+    transition: left 300ms ease;
+  }
+
+  .navbar .register:hover::before {
+    left: 0;
+  }
+
+  .navbar .register:hover {
+    color: white;
+  }
+
+  .navbar .login {
+    background-color: green;
+    transition-duration: 300ms;
+  }
+
+  .navbar .login:hover {
+    background-color: rgb(3, 150, 3);
+    color: white;
+  }
+
 }
