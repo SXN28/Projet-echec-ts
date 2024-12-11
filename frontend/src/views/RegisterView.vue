@@ -1,69 +1,57 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { UserService } from "@/services/userService";
+import router from "@/router";
 
 interface User {
   username: string;
   password: string;
 }
 
-const users = reactive({
-  user1: { username: "", password: "" },
-  user2: { username: "", password: "" },
+const user = reactive({
+  username: "",
+  password: "",
 });
 
-const handleLogin = async () => {
+const handleRegister = async () => {
   try {
-    const response1 = await UserService.login(users.user1);
-    //const response2 = await UserService.login(users.user2);
-
-    /*alert(`Login successful:
-      User 1 Token: ${response1.data.token}
-      User 2 Token: ${response2.data.token}`);*/
+    const response = await UserService.register(user);
+    const authResponse = await UserService.login({
+      username: user.username,
+      password: user.password,
+    });
+    localStorage.setItem('token', authResponse.data.token);
+    router.push({ name: 'home' });
   } catch (error) {
     console.error(error);
-    alert("Login failed. Please check your credentials.");
+    alert("Registration failed. Please check your inputs.");
   }
 };
 </script>
 
 <template>
-  <div class="dual-login">
-    <h1>Dual User Login</h1>
+  <div class="register-container">
+    <h1>User Registration</h1>
 
-    <form @submit.prevent="handleLogin" class="login-form">
-      <div class="user-login user-1">
-        <h2>User 1</h2>
+    <form @submit.prevent="handleRegister" class="register-form">
+      <div class="user-register">
+        <h2>Create Your Account</h2>
         <label>
           <span>Username:</span>
-          <input type="text" v-model="users.user1.username" required />
+          <input type="text" v-model="user.username" required />
         </label>
         <label>
           <span>Password:</span>
-          <input type="password" v-model="users.user1.password" required />
+          <input type="password" v-model="user.password" required />
         </label>
       </div>
-
-      <div class="user-login user-2">
-        <h2>User 2</h2>
-        <label>
-          <span>Username:</span>
-          <input type="text" v-model="users.user2.username" required />
-        </label>
-        <label>
-          <span>Password:</span>
-          <input type="password" v-model="users.user2.password" required />
-        </label>
-      </div>
-      <button type="submit" class="login-button">Login</button>
+      <button type="submit" class="register-button">Register</button>
     </form>
   </div>
 </template>
 
 <style scoped>
-
-
-.dual-login {
+.register-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -81,16 +69,15 @@ h1 {
   font-size: 2rem;
 }
 
-.login-form {
+.register-form {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 30px;
 }
 
-.user-login {
+.user-register {
   width: 30vw;
-  height: 40vh;
+  height: 50vh;
   background: rgba(255, 255, 255, 0.1);
   padding: 20px;
   border-radius: 12px;
@@ -99,7 +86,7 @@ h1 {
   backdrop-filter: blur(10px);
 }
 
-.user-login h2 {
+.user-register h2 {
   text-align: center;
   margin-bottom: 15px;
   font-size: 1.5rem;
@@ -135,7 +122,7 @@ input:focus {
   box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 
-button.login-button {
+button.register-button {
   padding: 15px 30px;
   background-color: #6a5acd;
   color: white;
@@ -147,7 +134,7 @@ button.login-button {
   transition: background 0.3s;
 }
 
-button.login-button:hover {
+button.register-button:hover {
   background-color: #483d8b;
 }
 </style>
