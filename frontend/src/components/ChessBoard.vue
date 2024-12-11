@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import axios from "axios";
-import {ref, onMounted} from "vue";
+import {ref, onMounted, inject, type Ref} from "vue";
+import {chessService} from "@/services/chessService";
 
 import kingWhite from "@/assets/chess-pieces/king_w.png";
 import queenWhite from "@/assets/chess-pieces/queen_w.png";
@@ -18,8 +18,12 @@ import pawnBlack from "@/assets/chess-pieces/pawn_b.png";
 let board = ref([]);
 let currentTurn = ref("white");
 let selectedPiece = ref<{ row: number; col: number } | null>(null);
-let gameId = ref(71);
+const gameId = inject("gameId") as Ref<number>;
 let playerColor = ref("black");
+
+const emit = defineEmits<{
+  (event: 'moveMade'): void;
+}>();
 
 type PieceType = "K" | "Q" | "R" | "B" | "N" | "P";
 
@@ -34,10 +38,10 @@ onMounted(() => {
 });
 
 function loadBoard() {
-  axios
-      .get(`http://localhost:8000/games/${gameId.value}`)
-      .then((response) => {
-        board.value = JSON.parse(response.data.board);
+  chessService
+      .loadBoard(gameId.value)
+      .then((boardData) => {
+        board.value = boardData;
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des données :", error);
@@ -72,10 +76,10 @@ function onDragStart(rowIndex: number, colIndex: number) {
 }
 
 function getCurrentTurn() {
-  axios
-      .get(`http://localhost:8000/games/${gameId.value}`)
-      .then((response) => {
-        currentTurn.value = response.data.turn;
+  chessService
+      .getCurrentTurn(gameId.value)
+      .then((turn) => {
+        currentTurn.value = turn;
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération du tour actuel :", error);
@@ -102,36 +106,31 @@ async function onDrop(targetRow: number, targetCol: number) {
 
   console.log("Requête envoyée:", requestPayload);
 
-  let res = await axios
-      .post(`http://localhost:8000/moves`, {
-        gameId: gameId.value,
-        fromRow: row,
-        fromCol: col,
-        toRow: targetRow,
-        toCol: targetCol,
-        playerColor: board.value[row][col].color,
-      });
-  if (res.status === 200) {
-    loadBoard()
-  } else {
-    res.status
-    res.data["message"]
+  try {
+    const res = await chessService.makeMove(requestPayload);
+    if (res.status === 200) {
+      loadBoard();
+      emit('moveMade');
+    } else {
+      console.log("Erreur lors du déplacement", res.data);
+    }
+  } catch (error) {
+    console.error("Erreur lors du déplacement:", error);
   }
 }
 
 async function createNewGame() {
   try {
     gameId.value++;
-
     const payload = {
       whitePlayerId: 1,
       blackPlayerId: 2,
     };
-    const response = await axios.post("http://localhost:8000/games", payload);
+    const response = await chessService.createNewGame(payload);
 
     if (response.status === 200) {
       console.log("Nouvelle partie créée avec succès :", response.data);
-      await axios.delete(`http://localhost:8000/games/${gameId.value-1}`);
+      await chessService.deleteGame(gameId.value - 1);
       await loadBoard();
     } else {
       console.error("Erreur inattendue :", response.data);
@@ -144,12 +143,26 @@ async function createNewGame() {
     }
   }
 }
-
-
 </script>
+
 
 <template>
   <div class="chessboard">
+    <div class="controls">
+      <div>
+        <button @click="createNewGame">Créer une nouvelle partie</button>
+      </div>
+
+      <label for="gameIdInput">ID de la partie :</label>
+      <input
+          type="number"
+          id="gameIdInput"
+          v-model.number="gameId"
+          @change="loadBoard"
+      />
+      <p>C'est au tour des {{ currentTurn }}</p>
+    </div>
+
     <div
         v-for="(row, rowIndex) in board"
         :key="rowIndex"
@@ -159,9 +172,9 @@ async function createNewGame() {
           :key="colIndex"
           class="cell"
           :class="{
-            black: (rowIndex + colIndex) % 2 === 0,
-            white: (rowIndex + colIndex) % 2 !== 0,
-          }"
+          black: (rowIndex + colIndex) % 2 === 0,
+          white: (rowIndex + colIndex) % 2 !== 0,
+        }"
           @dragover.prevent="allowDrop"
           @drop="onDrop(rowIndex, colIndex)">
         <img
@@ -184,8 +197,6 @@ async function createNewGame() {
   display: flex;
   align-items: center;
   flex-direction: column;
-  width: 640px;
-  height: 640px;
 }
 
 
