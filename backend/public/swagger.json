@@ -203,6 +203,68 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"MoveSideOutputDTO": {
+				"properties": {
+					"gameId": {
+						"type": "number",
+						"format": "double"
+					},
+					"from": {
+						"properties": {
+							"col": {
+								"type": "number",
+								"format": "double"
+							},
+							"row": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"col",
+							"row"
+						],
+						"type": "object"
+					},
+					"to": {
+						"properties": {
+							"col": {
+								"type": "number",
+								"format": "double"
+							},
+							"row": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"col",
+							"row"
+						],
+						"type": "object"
+					},
+					"playerColor": {
+						"type": "string",
+						"enum": [
+							"white",
+							"black"
+						]
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"gameId",
+					"from",
+					"to",
+					"playerColor",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"GameOutputDTO": {
 				"properties": {
 					"gameId": {
@@ -604,6 +666,41 @@
 						}
 					}
 				}
+			}
+		},
+		"/moves/game/{gameId}": {
+			"get": {
+				"operationId": "GetMovesByGameId",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/MoveSideOutputDTO"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Moves"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "gameId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/games": {

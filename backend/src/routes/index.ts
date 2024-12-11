@@ -98,6 +98,18 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MoveSideOutputDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "gameId": {"dataType":"double","required":true},
+            "from": {"dataType":"nestedObjectLiteral","nestedProperties":{"col":{"dataType":"double","required":true},"row":{"dataType":"double","required":true}},"required":true},
+            "to": {"dataType":"nestedObjectLiteral","nestedProperties":{"col":{"dataType":"double","required":true},"row":{"dataType":"double","required":true}},"required":true},
+            "playerColor": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["white"]},{"dataType":"enum","enums":["black"]}],"required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GameOutputDTO": {
         "dataType": "refObject",
         "properties": {
@@ -106,6 +118,7 @@ const models: TsoaRoute.Models = {
             "blackPlayerId": {"dataType":"double","required":true},
             "board": {"dataType":"string","required":true},
             "status": {"dataType":"string","required":true},
+            "turn": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -439,6 +452,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'makeMove',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/moves/game/:gameId',
+            ...(fetchMiddlewares<RequestHandler>(MoveController)),
+            ...(fetchMiddlewares<RequestHandler>(MoveController.prototype.getMovesByGameId)),
+
+            async function MoveController_getMovesByGameId(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    gameId: {"in":"path","name":"gameId","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new MoveController();
+
+              await templateService.apiHandler({
+                methodName: 'getMovesByGameId',
                 controller,
                 response,
                 next,

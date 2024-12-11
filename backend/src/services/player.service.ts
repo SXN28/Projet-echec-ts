@@ -20,7 +20,6 @@ export class PlayerService {
         }
     }
 
-    // Crée un nouveau joueur
     public async createPlayer(
         username: string,
         email: string,

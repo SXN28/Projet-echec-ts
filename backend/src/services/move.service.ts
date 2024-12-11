@@ -1,10 +1,11 @@
 import { Move } from "../models/move.model";
 import { Game } from "../models/game.model";
 import { isValidMove } from "../rules/chess-rules";
-import { MoveOutputDTO } from "../dto/move.dto";
+import {MoveOutputDTO, MoveSideOutputDTO} from "../dto/move.dto";
 import errorHandler from "../middlewares/errorHandler"
 import {notFound} from "../error/NotFoundError";
 import {invalidMoveError, turnMoveError} from "../error/TurnMoveError";
+import {MoveMapper} from "../mapper/move.mapper";
 
 export class MoveService {
     public async makeMove(
@@ -34,7 +35,6 @@ export class MoveService {
             invalidMoveError();
         }
 
-        // Applique le mouvement
         board[move.toRow][move.toCol] = board[move.fromRow][move.fromCol];
         board[move.fromRow][move.fromCol] = null;
 
@@ -60,6 +60,22 @@ export class MoveService {
             board: JSON.stringify(board),
         };
     }
+
+    public async getMovesByGameId(gameId: number): Promise<MoveSideOutputDTO[]> {
+        try {
+            const moves = await Move.findAll({
+                where: {
+                    gameId: gameId
+                },
+                order: [['createdAt', 'ASC']]
+            });
+
+            return await MoveMapper.toSideOutputDtoList(moves);
+        } catch (error: any) {
+            throw new Error("Error retrieving moves: " + error.message);
+        }
+    }
+
 }
 
 
