@@ -1,24 +1,21 @@
 <template>
   <div id="app">
-    <ChessBoard />
+    <router-view />
   </div>
 </template>
 
-<script>
-import ChessBoard from './components/ChessBoard.vue';
-
-export default {
-  name: 'App',
-  components: {
-    ChessBoard,
-  },
-};
+<script lang="ts">
+const name = 'App';
 </script>
+
 
 <style>
 #app {
-  font-family: Arial, sans-serif;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  margin-top: 20px;
+  margin: 0;
+  padding: 0;
 }
 </style>

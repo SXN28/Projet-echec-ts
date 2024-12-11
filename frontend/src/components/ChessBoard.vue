@@ -100,7 +100,6 @@ async function onDrop(targetRow: number, targetCol: number) {
     playerColor: board.value[row][col].color,
   };
 
-  // Afficher la requête dans la console
   console.log("Requête envoyée:", requestPayload);
 
   let res = await axios
@@ -150,23 +149,7 @@ async function createNewGame() {
 </script>
 
 <template>
-  <div>
-    <button @click="createNewGame">Créer une nouvelle partie</button>
-  </div>
   <div class="chessboard">
-
-    <div class="controls">
-      <label for="gameIdInput">ID de la partie :</label>
-      <input
-          type="number"
-          id="gameIdInput"
-          v-model.number="gameId"
-          @change="loadBoard"
-      />
-      <p>C'est au tour des {{ currentTurn }}</p>
-    </div>
-
-
     <div
         v-for="(row, rowIndex) in board"
         :key="rowIndex"
@@ -201,22 +184,18 @@ async function createNewGame() {
   display: flex;
   align-items: center;
   flex-direction: column;
+  width: 640px;
+  height: 640px;
 }
 
-.controls {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
 .row {
   display: flex;
 }
 
 .cell {
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
