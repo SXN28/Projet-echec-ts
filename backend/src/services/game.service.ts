@@ -1,6 +1,8 @@
 import { User } from '../models/user.model';
 import { Game } from '../models/game.model';
 import { GameOutputDTO } from "../dto/game.dto";
+import {Op} from "sequelize";
+import Move from "../models/move.model";
 
 export class GameService {
 
@@ -88,6 +90,55 @@ export class GameService {
             turn: game.turn,
         };
     }
+
+    static async getGamesByUser(userId: number): Promise<GameOutputDTO[]> {
+        const games = await Game.findAll({
+            where: {
+                [Op.or]: [
+                    { whitePlayerId: userId },
+                    { blackPlayerId: userId },
+                ],
+            },
+        });
+
+        return games.map((game) => ({
+            gameId: game.id,
+            whitePlayerId: game.whitePlayerId,
+            blackPlayerId: game.blackPlayerId,
+            board: game.board,
+            status: game.status,
+            turn: game.turn,
+        }));
+    }
+
+
+    static async getGameDetails(gameId: number): Promise<{ board: Array<any>; moves: Array<any> }> {
+        const game = await Game.findByPk(gameId);
+
+        if (!game) {
+            throw new Error(`Game with ID ${gameId} does not exist.`);
+        }
+
+        // Désérialisation du plateau de jeu (JSON -> objet JS)
+        const board = JSON.parse(game.board);
+
+        // Récupérer les mouvements associés à ce gameId
+        const moves = await Move.findAll({
+            where: { gameId },
+            order: [["id", "ASC"]], // Tri pour garantir l'ordre des mouvements
+        });
+
+        // Transformer les données pour correspondre au format attendu
+        const formattedMoves = moves.map((move) => ({
+            fromRow: move.fromRow,
+            fromCol: move.fromCol,
+            toRow: move.toRow,
+            toCol: move.toCol,
+        }));
+
+        return { board, moves: formattedMoves };
+    }
+
 }
 
 export const gameService = new GameService();

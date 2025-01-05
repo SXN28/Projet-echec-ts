@@ -27,6 +27,7 @@ const models: TsoaRoute.Models = {
             "id": {"dataType":"double","required":true},
             "username": {"dataType":"string","required":true},
             "password": {"dataType":"string","required":true},
+            "elo": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -455,6 +456,66 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getGame',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsGameController_getGamesByUser: Record<string, TsoaRoute.ParameterSchema> = {
+                userId: {"in":"query","name":"userId","required":true,"dataType":"double"},
+        };
+        app.get('/games',
+            ...(fetchMiddlewares<RequestHandler>(GameController)),
+            ...(fetchMiddlewares<RequestHandler>(GameController.prototype.getGamesByUser)),
+
+            async function GameController_getGamesByUser(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsGameController_getGamesByUser, request, response });
+
+                const controller = new GameController();
+
+              await templateService.apiHandler({
+                methodName: 'getGamesByUser',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsGameController_getGameDetails: Record<string, TsoaRoute.ParameterSchema> = {
+                gameId: {"in":"path","name":"gameId","required":true,"dataType":"double"},
+        };
+        app.get('/games/:gameId/details',
+            ...(fetchMiddlewares<RequestHandler>(GameController)),
+            ...(fetchMiddlewares<RequestHandler>(GameController.prototype.getGameDetails)),
+
+            async function GameController_getGameDetails(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsGameController_getGameDetails, request, response });
+
+                const controller = new GameController();
+
+              await templateService.apiHandler({
+                methodName: 'getGameDetails',
                 controller,
                 response,
                 next,
