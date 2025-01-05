@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {ref, onMounted, inject, type Ref, onUnmounted, watch} from "vue";
-import eventBus from "@/eventBus";
 import { chessService } from "@/services/chessService";
 
 import kingWhite from "@/assets/chess-pieces/king_w.png";
@@ -17,7 +16,7 @@ import knightBlack from "@/assets/chess-pieces/knight_b.png";
 import pawnBlack from "@/assets/chess-pieces/pawn_b.png";
 
 let board = ref([]);
-let currentTurn = ref("white");
+const currentTurn = inject<Ref<string>>("currentTurn");
 let selectedPiece = ref<{ row: number; col: number } | null>(null);
 
 const gameId = inject<Ref<number | null>>("gameId");
@@ -93,7 +92,9 @@ function getCurrentTurn() {
   chessService
       .getCurrentTurn(gameId.value)
       .then((turn) => {
-        currentTurn.value = turn;
+        if (currentTurn) {
+          currentTurn.value = turn;
+        }
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération du tour actuel :", error);
@@ -125,6 +126,7 @@ async function onDrop(targetRow: number, targetCol: number) {
     if (res.status === 200) {
       loadBoard();
       emit("moveMade");
+      getCurrentTurn();
     } else {
       console.log("Erreur lors du déplacement", res.data);
     }
@@ -145,7 +147,6 @@ watch(gameId, () => {
     </div>
 
     <div class="board">
-      {{gameId}}
       <div v-for="(row, rowIndex) in board" :key="rowIndex" class="row">
         <div
             v-for="(cell, colIndex) in row"

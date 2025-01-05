@@ -50,16 +50,10 @@ const handleLogin = async () => {
         blackPlayerId: user2ID,
       });
 
-      localStorage.setItem("gameId", newGame.data.gameId);
+      localStorage.setItem("id", user1ID);
 
+      localStorage.setItem("gameId", newGame.data.gameId);
       console.log("Partie créée :", newGame.data);
-      alert(`Login réussi et partie créée :
-        User 1 : ${users.user1.username} (ID: ${user1ID})
-        User 2 : ${users.user2.username} (ID: ${user2ID})
-        Game ID : ${newGame.data.gameId}`);
-    } else {
-      alert(`Login réussi :
-        User 1 : ${users.user1.username} (ID: ${user1ID})`);
     }
 
     router.push("/chess");

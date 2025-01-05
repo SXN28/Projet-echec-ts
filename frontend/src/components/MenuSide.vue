@@ -2,7 +2,6 @@
 import {ref, onMounted, inject, type Ref} from "vue";
 import { useRouter } from "vue-router";
 import { chessService } from "@/services/chessService";
-import eventBus from "@/eventBus";
 
 const router = useRouter();
 
@@ -14,9 +13,9 @@ const user = ref({
 const activeMenu = ref("home");
 
 const menus = [
-  { id: "home", label: "Home", icon: "🏠" },
-  { id: "profile", label: "Profile", icon: "👤" },
-  { id: "settings", label: "Settings", icon: "⚙️" },
+  { id: "replay", label: "Replay", icon: "🏠" },
+  { id: "profile", label: "Profile", icon: "⚙️" },
+  { id: "settings", label: "classement", icon: "👤" },
   { id: "logout", label: "Déconnexion", icon: "⏻" },
 ];
 
@@ -29,13 +28,15 @@ const isMenuActive = (menuId: string) => activeMenu.value === menuId;
 const selectMenu = (menuId: string) => {
   if (menuId === "logout") {
     logout();
+  } else if (menuId === "replay") {
+    router.push("/replay");
   } else {
     activeMenu.value = menuId;
   }
 };
 
 const gameId = inject<Ref<number | null>>("gameId");
-const currentTurn = ref("white");
+const currentTurn = inject<Ref<string>>("currentTurn");
 
 const triggerChessboardLoadBoard = inject<() => void>("triggerChessboardLoadBoard");
 
@@ -50,8 +51,9 @@ onMounted(() => {
 function getCurrentTurn() {
   if (!gameId) return;
   chessService
-      .getCurrentTurn(gameId)
+      .getCurrentTurn(gameId.value)
       .then((turn) => {
+        console.log(turn);
         currentTurn.value = turn;
       })
       .catch((error) => {
@@ -88,8 +90,6 @@ async function createNewGame() {
 }
 </script>
 
-
-
 <template>
   <div id="menu-side">
     <div class="menu-header">
@@ -117,9 +117,9 @@ async function createNewGame() {
     <!-- Section des contrôles de parties -->
     <div class="controls">
       <div>
-        <button @click="createNewGame">Créer une nouvelle partie</button>
+        <button class="new-game-btn" @click="createNewGame">🎮 Créer une nouvelle partie</button>
       </div>
-      <p>C'est au tour des {{ currentTurn }}</p>
+      <p class="current-turn">C'est au <strong>tour des {{ currentTurn }}</strong></p>
     </div>
   </div>
 </template>
@@ -200,37 +200,36 @@ async function createNewGame() {
 
 .controls {
   margin-top: 20px;
+  text-align: center;
 }
 
-.controls label {
-  display: block;
-  margin-top: 10px;
-  font-size: 0.9em;
-}
-
-.controls button {
-  margin-bottom: 10px;
-  padding: 5px 10px;
-  font-size: 0.9em;
+.new-game-btn {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  font-size: 1em;
+  font-weight: bold;
   border: none;
-  border-radius: 3px;
-  background-color: #444;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #4CAF50, #81C784);
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.controls button:hover {
-  background-color: #555;
+.new-game-btn:hover {
+  background: linear-gradient(135deg, #43A047, #66BB6A);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-.controls input {
-  margin-top: 5px;
-  padding: 5px;
-  font-size: 0.9em;
-  border: 1px solid #555;
-  border-radius: 3px;
-  background-color: #333;
-  color: white;
+.current-turn {
+  font-size: 1.1em;
+  color: #E0E0E0;
+  margin-top: 10px;
+}
+
+.current-turn strong {
+  color: #FFD700; /* Doré pour mettre en évidence le tour */
 }
 </style>

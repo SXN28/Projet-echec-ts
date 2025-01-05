@@ -34,5 +34,18 @@ export const chessService = {
     },
     getMoves(gameId: number) {
         return axios.get(`${API_URL}/moves/game/${gameId}`);
-    }
+    },
+    getUserId() {
+        return localStorage.getItem("id");
+    },
+    getUserGames() {
+        const userId = this.getUserId();
+        if (!userId) {
+            return Promise.reject(new Error("ID utilisateur introuvable dans le localStorage"));
+        }
+        return axios.get(`${API_URL}/games?userId=${userId}`).then((response) => response.data);
+    },
+    getGameDetails(gameId: number) {
+        return axios.get(`${API_URL}/games/${gameId}/details`).then((response) => response.data);
+    },
 };

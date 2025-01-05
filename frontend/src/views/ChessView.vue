@@ -9,15 +9,16 @@ const gameId = ref<number | null>(
     localStorage.getItem("gameId") ? parseInt(localStorage.getItem("gameId")!) : null
 );
 
+const currentTurn = ref("white");
+const moves = ref([]);
+const chessboardRef = ref(null);
+
+
+provide("currentTurn", currentTurn);
 provide("gameId", gameId);
 provide("triggerChessboardLoadBoard", () => {
   chessboardRef.value?.loadBoard();
 });
-
-const moves = ref([]);
-provide("gameId", gameId);
-
-const chessboardRef = ref(null);
 
 const fetchMoves = async () => {
   try {
