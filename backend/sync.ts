@@ -20,6 +20,22 @@ sequelize
   .sync()
   .then(async () => {
     console.log('Database synchronized!');
+
+    // Vérifier si le User "Guest" existe déjà
+    const [guestUser, created] = await User.findOrCreate({
+      where: { username: 'Guest' }, // Condition pour vérifier l'existence
+      defaults: { 
+        username: 'Guest', // Ajout explicite de toutes les propriétés requises
+        password: 'defaultpassword', // Mot de passe par défaut
+        elo: 1200, // ELO par défaut
+      },
+    });
+
+    if (created) {
+      console.log('User "Guest" created with default values: username="Guest", password="defaultpassword", elo=1200');
+    } else {
+      console.log('User "Guest" already exists');
+    }
   })
   .catch((error) => {
     console.error('Error syncing database:', error);
