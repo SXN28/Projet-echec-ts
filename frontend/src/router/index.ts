@@ -5,6 +5,7 @@ import ChessView from "@/views/ChessView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import ReplayList from "@/views/ReplayList.vue";
 import GameReplay from "@/views/GameReplay.vue";
+import Classement from "@/views/Classement.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +39,12 @@ const router = createRouter({
       path: "/game/:id/replay",
       name: "GameReplay",
       component: GameReplay,
+      props: true,
+    },
+    {
+      path: "/classement",
+      name: "classement",
+      component: Classement,
       props: true,
     },
   ],

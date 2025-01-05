@@ -15,7 +15,7 @@ const activeMenu = ref("home");
 const menus = [
   { id: "replay", label: "Replay", icon: "🏠" },
   { id: "profile", label: "Profile", icon: "⚙️" },
-  { id: "settings", label: "classement", icon: "👤" },
+  { id: "classement", label: "classement", icon: "👤" },
   { id: "logout", label: "Déconnexion", icon: "⏻" },
 ];
 
@@ -30,7 +30,9 @@ const selectMenu = (menuId: string) => {
     logout();
   } else if (menuId === "replay") {
     router.push("/replay");
-  } else {
+  } else if (menuId === "classement") {
+    router.push("/classement");
+  }else {
     activeMenu.value = menuId;
   }
 };
@@ -40,7 +42,6 @@ const currentTurn = inject<Ref<string>>("currentTurn");
 
 const triggerChessboardLoadBoard = inject<() => void>("triggerChessboardLoadBoard");
 
-// Charger les données initiales
 onMounted(() => {
   if (gameId) {
     triggerChessboardLoadBoard!();
@@ -114,12 +115,11 @@ async function createNewGame() {
       </ul>
     </div>
 
-    <!-- Section des contrôles de parties -->
     <div class="controls">
       <div>
         <button class="new-game-btn" @click="createNewGame">🎮 Créer une nouvelle partie</button>
       </div>
-      <p class="current-turn">C'est au <strong>tour des {{ currentTurn }}</strong></p>
+      <p class="current-turn">C'est au tour des <strong>{{ currentTurn }}</strong></p>
     </div>
   </div>
 </template>

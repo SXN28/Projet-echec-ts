@@ -57,12 +57,10 @@ onUpdated(() => {
 }
 
 .moves-container {
-  max-height: 100vh; /* Limite la hauteur pour activer le défilement */
+  max-height: 100vh;
   overflow-y: auto;
   padding: 10px;
-  border: 1px solid #ddd;
   border-radius: 10px;
-  background-color: #f4f4f4; /* Gris clair */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 

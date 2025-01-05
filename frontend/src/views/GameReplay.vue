@@ -3,7 +3,6 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { chessService } from "@/services/chessService";
 
-// Importation des images des pièces
 import kingWhite from "@/assets/chess-pieces/king_w.png";
 import queenWhite from "@/assets/chess-pieces/queen_w.png";
 import rookWhite from "@/assets/chess-pieces/rook_w.png";
@@ -17,7 +16,6 @@ import bishopBlack from "@/assets/chess-pieces/bishop_b.png";
 import knightBlack from "@/assets/chess-pieces/knight_b.png";
 import pawnBlack from "@/assets/chess-pieces/pawn_b.png";
 
-// Configuration initiale de l'échiquier
 const initialBoard = [
   [
     { piece: "R", color: "white" },
@@ -47,12 +45,10 @@ const initialBoard = [
   ],
 ];
 
-// Données du jeu
 const board = ref(initialBoard.map(row => row.map(cell => (cell ? { ...cell } : null))));
 const moves = ref<Array<{ fromRow: number; fromCol: number; toRow: number; toCol: number }>>([]);
 const currentMoveIndex = ref(0);
 
-// Récupérer l'identifiant de la partie depuis l'URL
 const route = useRoute();
 const gameId = ref(Number(route.params.id));
 
@@ -63,7 +59,6 @@ onMounted(async () => {
   await loadGame();
 });
 
-// Charger les données du jeu
 async function loadGame() {
   try {
     const gameData = await chessService.getGameDetails(gameId.value);
@@ -74,7 +69,6 @@ async function loadGame() {
   }
 }
 
-// Obtenir l'image de la pièce
 function getPieceImage(cell: { color: string; piece: string } | null): string | null {
   if (!cell) return null;
 
@@ -119,7 +113,6 @@ function playPreviousMove() {
   const move = moves.value[currentMoveIndex.value];
   const piece = board.value[move.toRow][move.toCol];
 
-  // Revenir en arrière sur le plateau
   board.value[move.fromRow][move.fromCol] = piece;
   board.value[move.toRow][move.toCol] = null;
 }
@@ -127,10 +120,6 @@ function playPreviousMove() {
 
 <template>
   <div class="chessboard">
-    <div class="player player-top-left">
-      <h3>{{ player1 }}</h3>
-    </div>
-
     <div class="board">
       <div v-for="(row, rowIndex) in board" :key="rowIndex" class="row">
         <div
@@ -151,11 +140,6 @@ function playPreviousMove() {
         </div>
       </div>
     </div>
-
-    <div class="player player-bottom-right">
-      <h3>{{ player2 }}</h3>
-    </div>
-
     <div class="replay-controls">
       <button
           @click="playPreviousMove"
@@ -176,28 +160,24 @@ function playPreviousMove() {
 </template>
 
 <style scoped>
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+}
+
 .chessboard {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   position: relative;
   gap: 10px;
-}
-
-.player {
-  position: absolute;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.player-top-left {
-  top: -40px;
-  left: 0;
-}
-
-.player-bottom-right {
-  bottom: -40px;
-  right: 0;
 }
 
 .board {
@@ -242,7 +222,7 @@ function playPreviousMove() {
   padding: 10px 20px;
   font-size: 1.2rem;
   color: white;
-  background-color: #007bff;
+  background-color: #28a745;
   border: none;
   border-radius: 5px;
   cursor: pointer;

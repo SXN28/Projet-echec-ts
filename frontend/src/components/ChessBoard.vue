@@ -22,7 +22,7 @@ let selectedPiece = ref<{ row: number; col: number } | null>(null);
 const gameId = inject<Ref<number | null>>("gameId");
 
 const player1 = ref(localStorage.getItem("user1"));
-const player2 = ref(localStorage.getItem("user2") || "Guest");
+const player2 = ref(localStorage.getItem("user2"));
 
 onMounted(() => {
   loadBoard();
@@ -171,7 +171,6 @@ watch(gameId, () => {
       </div>
     </div>
 
-    <!-- Nom du joueur 2 (en bas à droite) -->
     <div class="player player-bottom-right">
       <h3>{{ player2 }}</h3>
     </div>
