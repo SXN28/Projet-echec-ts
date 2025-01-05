@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { UserService } from "@/services/userService";
+import {chessService} from "@/services/chessService";
 
 interface User {
   username: string;
@@ -12,28 +14,76 @@ const users = reactive({
   user2: { username: "", password: "" },
 });
 
+const isSinglePlayer = ref(true);
+const router = useRouter();
+
 const handleLogin = async () => {
   try {
+    // Étape 1 : Login pour User 1
     const response1 = await UserService.login(users.user1);
-    //const response2 = await UserService.login(users.user2);
+    const token1 = response1.data.token;
+    localStorage.setItem("user1", users.user1.username);
 
-    /*alert(`Login successful:
-      User 1 Token: ${response1.data.token}
-      User 2 Token: ${response2.data.token}`);*/
+    let token2 = null;
+
+    // Étape 2 : Login pour User 2 (si multijoueur)
+    if (!isSinglePlayer.value) {
+      const response2 = await UserService.login(users.user2);
+      token2 = response2.data.token;
+      localStorage.setItem("user2", users.user2.username);
+    }
+
+    // Étape 3 : Récupérer les IDs des deux utilisateurs
+    const user1Response = await UserService.getID(users.user1.username);
+    const user1ID = user1Response.data.id;
+
+    let user2ID = null;
+    if (!isSinglePlayer.value) {
+      const user2Response = await UserService.getID(users.user2.username);
+      user2ID = user2Response.data.id;
+    }
+
+    // Étape 4 : Créer une partie si multijoueur
+    if (!isSinglePlayer.value && user2ID !== null) {
+      const newGame = await chessService.createNewGame({
+        whitePlayerId: user1ID,
+        blackPlayerId: user2ID,
+      });
+
+      localStorage.setItem("gameId", newGame.data.gameId);
+
+      console.log("Partie créée :", newGame.data);
+      alert(`Login réussi et partie créée :
+        User 1 : ${users.user1.username} (ID: ${user1ID})
+        User 2 : ${users.user2.username} (ID: ${user2ID})
+        Game ID : ${newGame.data.gameId}`);
+    } else {
+      alert(`Login réussi :
+        User 1 : ${users.user1.username} (ID: ${user1ID})`);
+    }
+
+    router.push("/chess");
   } catch (error) {
     console.error(error);
-    alert("Login failed. Please check your credentials.");
+    alert("Échec de la connexion ou de la création de la partie.");
   }
 };
 </script>
 
 <template>
   <div class="dual-login">
-    <h1>Dual User Login</h1>
+    <h1>Login</h1>
+
+    <div class="toggle-mode">
+      <label>
+        <input type="checkbox" v-model="isSinglePlayer" />
+        Solo Mode (Disable second user)
+      </label>
+    </div>
 
     <form @submit.prevent="handleLogin" class="login-form">
       <div class="user-login user-1">
-        <h2>User 1</h2>
+        <h2>User 1 (main)</h2>
         <label>
           <span>Username:</span>
           <input type="text" v-model="users.user1.username" required />
@@ -44,25 +94,34 @@ const handleLogin = async () => {
         </label>
       </div>
 
-      <div class="user-login user-2">
+      <div class="user-login user-2" :class="{ disabled: isSinglePlayer }">
         <h2>User 2</h2>
         <label>
           <span>Username:</span>
-          <input type="text" v-model="users.user2.username" required />
+          <input
+              type="text"
+              v-model="users.user2.username"
+              :disabled="isSinglePlayer"
+              required
+          />
         </label>
         <label>
           <span>Password:</span>
-          <input type="password" v-model="users.user2.password" required />
+          <input
+              type="password"
+              v-model="users.user2.password"
+              :disabled="isSinglePlayer"
+              required
+          />
         </label>
       </div>
+
       <button type="submit" class="login-button">Login</button>
     </form>
   </div>
 </template>
 
 <style scoped>
-
-
 .dual-login {
   display: flex;
   flex-direction: column;
@@ -77,8 +136,15 @@ const handleLogin = async () => {
 }
 
 h1 {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   font-size: 2rem;
+}
+
+.toggle-mode {
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #e0e0e0;
 }
 
 .login-form {
@@ -97,6 +163,11 @@ h1 {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: left;
   backdrop-filter: blur(10px);
+}
+
+.user-login.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .user-login h2 {

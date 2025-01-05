@@ -8,7 +8,10 @@ export const chessService = {
             return JSON.parse(response.data.board);
         });
     },
-    getCurrentTurn(gameId: number) {
+    getCurrentTurn(gameId: number | null) {
+        if (!gameId) {
+            return Promise.reject(new Error("gameId est invalide ou nul"));
+        }
         return axios
             .get(`${API_URL}/games/${gameId}`)
             .then((response) => response.data.turn);

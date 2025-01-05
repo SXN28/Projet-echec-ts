@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import {ref, onMounted, inject, type Ref} from "vue";
-import {chessService} from "@/services/chessService";
+import {ref, onMounted, inject, type Ref, onUnmounted, watch} from "vue";
+import eventBus from "@/eventBus";
+import { chessService } from "@/services/chessService";
 
 import kingWhite from "@/assets/chess-pieces/king_w.png";
 import queenWhite from "@/assets/chess-pieces/queen_w.png";
@@ -18,11 +19,23 @@ import pawnBlack from "@/assets/chess-pieces/pawn_b.png";
 let board = ref([]);
 let currentTurn = ref("white");
 let selectedPiece = ref<{ row: number; col: number } | null>(null);
-const gameId = inject("gameId") as Ref<number>;
-let playerColor = ref("black");
+
+const gameId = inject<Ref<number | null>>("gameId");
+
+const player1 = ref(localStorage.getItem("user1"));
+const player2 = ref(localStorage.getItem("user2") || "Guest");
+
+onMounted(() => {
+  loadBoard();
+  getCurrentTurn();
+});
+
+onUnmounted(() => {
+  loadBoard();
+});
 
 const emit = defineEmits<{
-  (event: 'moveMade'): void;
+  (event: "moveMade"): void;
 }>();
 
 type PieceType = "K" | "Q" | "R" | "B" | "N" | "P";
@@ -32,21 +45,22 @@ type Cell = {
   piece: PieceType;
 };
 
-onMounted(() => {
-  loadBoard();
-  getCurrentTurn();
-});
 
 function loadBoard() {
   chessService
       .loadBoard(gameId.value)
       .then((boardData) => {
         board.value = boardData;
+        console.log("Échiquier rechargé :", boardData);
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des données :", error);
       });
 }
+
+defineExpose({
+  loadBoard,
+});
 
 function getPieceImage(cell: { color: string; piece: string }): any {
   const pieceImages = {
@@ -72,7 +86,7 @@ function getPieceImage(cell: { color: string; piece: string }): any {
 }
 
 function onDragStart(rowIndex: number, colIndex: number) {
-  selectedPiece.value = {row: rowIndex, col: colIndex};
+  selectedPiece.value = { row: rowIndex, col: colIndex };
 }
 
 function getCurrentTurn() {
@@ -93,7 +107,7 @@ function allowDrop(event: Event) {
 async function onDrop(targetRow: number, targetCol: number) {
   if (!selectedPiece.value) return;
 
-  const {row, col} = selectedPiece.value;
+  const { row, col } = selectedPiece.value;
 
   const requestPayload = {
     gameId: gameId.value,
@@ -110,7 +124,7 @@ async function onDrop(targetRow: number, targetCol: number) {
     const res = await chessService.makeMove(requestPayload);
     if (res.status === 200) {
       loadBoard();
-      emit('moveMade');
+      emit("moveMade");
     } else {
       console.log("Erreur lors du déplacement", res.data);
     }
@@ -119,73 +133,46 @@ async function onDrop(targetRow: number, targetCol: number) {
   }
 }
 
-async function createNewGame() {
-  try {
-    gameId.value++;
-    const payload = {
-      whitePlayerId: 1,
-      blackPlayerId: 2,
-    };
-    const response = await chessService.createNewGame(payload);
-
-    if (response.status === 200) {
-      console.log("Nouvelle partie créée avec succès :", response.data);
-      await chessService.deleteGame(gameId.value - 1);
-      await loadBoard();
-    } else {
-      console.error("Erreur inattendue :", response.data);
-    }
-  } catch (error: any) {
-    if (error.response) {
-      console.error("Erreur lors de la création de la partie :", error.response.data);
-    } else {
-      console.error("Erreur de connexion au backend :", error.message);
-    }
-  }
-}
+watch(gameId, () => {
+  loadBoard();
+});
 </script>
-
 
 <template>
   <div class="chessboard">
-    <div class="controls">
-      <div>
-        <button @click="createNewGame">Créer une nouvelle partie</button>
-      </div>
-
-      <label for="gameIdInput">ID de la partie :</label>
-      <input
-          type="number"
-          id="gameIdInput"
-          v-model.number="gameId"
-          @change="loadBoard"
-      />
-      <p>C'est au tour des {{ currentTurn }}</p>
+    <div class="player player-top-left">
+      <h3>{{ player1 }}</h3>
     </div>
 
-    <div
-        v-for="(row, rowIndex) in board"
-        :key="rowIndex"
-        class="row">
-      <div
-          v-for="(cell, colIndex) in row"
-          :key="colIndex"
-          class="cell"
-          :class="{
-          black: (rowIndex + colIndex) % 2 === 0,
-          white: (rowIndex + colIndex) % 2 !== 0,
-        }"
-          @dragover.prevent="allowDrop"
-          @drop="onDrop(rowIndex, colIndex)">
-        <img
-            v-if="cell"
-            :src="getPieceImage(cell)"
-            :alt="cell.piece"
-            class="piece-image"
-            draggable="true"
-            @dragstart="onDragStart(rowIndex, colIndex)"
-        />
+    <div class="board">
+      {{gameId}}
+      <div v-for="(row, rowIndex) in board" :key="rowIndex" class="row">
+        <div
+            v-for="(cell, colIndex) in row"
+            :key="colIndex"
+            class="cell"
+            :class="{
+            black: (rowIndex + colIndex) % 2 === 0,
+            white: (rowIndex + colIndex) % 2 !== 0,
+          }"
+            @dragover.prevent="allowDrop"
+            @drop="onDrop(rowIndex, colIndex)"
+        >
+          <img
+              v-if="cell"
+              :src="getPieceImage(cell)"
+              :alt="cell.piece"
+              class="piece-image"
+              draggable="true"
+              @dragstart="onDragStart(rowIndex, colIndex)"
+          />
+        </div>
       </div>
+    </div>
+
+    <!-- Nom du joueur 2 (en bas à droite) -->
+    <div class="player player-bottom-right">
+      <h3>{{ player2 }}</h3>
     </div>
   </div>
 </template>
@@ -193,12 +180,33 @@ async function createNewGame() {
 
 <style scoped>
 .chessboard {
-  border: 2px solid black;
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+  position: relative;
+  gap: 10px;
 }
 
+.player {
+  position: absolute;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.player-top-left {
+  top: -40px;
+  left: 0;
+}
+
+.player-bottom-right {
+  bottom: -40px;
+  right: 0;
+}
+
+.board {
+  border: 2px solid black;
+  position: relative;
+}
 
 .row {
   display: flex;

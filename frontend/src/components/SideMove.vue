@@ -1,3 +1,23 @@
+<script lang="ts" setup>
+import { ref, defineProps, inject } from 'vue';
+import type { Ref } from 'vue';
+
+interface Move {
+  gameId: number;
+  from: { row: number, col: number };
+  to: { row: number, col: number };
+  playerColor: string;
+  createdAt: string;
+}
+
+const gameId = ref<number | null>(localStorage.getItem("gameId") ? parseInt(localStorage.getItem("gameId")!) : null);
+
+const props = defineProps<{
+  moves: Move[];
+}>();
+
+</script>
+
 <template>
   <div class="move-list">
     <table v-if="moves.length > 0">
@@ -15,30 +35,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref, defineProps, inject } from 'vue';
-import type { Ref } from 'vue';
-
-interface Move {
-  gameId: number;
-  from: { row: number, col: number };
-  to: { row: number, col: number };
-  playerColor: string;
-  createdAt: string;
-}
-
-const gameId = inject("gameId") as Ref<number>;
-
-const props = defineProps<{
-  moves: Move[];
-}>();
-
-</script>
-
 <style scoped>
-.move-list {
-  padding: 20px;
-}
 
 table {
   width: 100%;

@@ -14,14 +14,10 @@ const user = reactive({
 });
 
 const handleRegister = async () => {
+
   try {
     const response = await UserService.register(user);
-    const authResponse = await UserService.login({
-      username: user.username,
-      password: user.password,
-    });
-    localStorage.setItem('token', authResponse.data.token);
-    router.push({ name: 'home' });
+    router.push({ name: 'login' });
   } catch (error) {
     console.error(error);
     alert("Registration failed. Please check your inputs.");
