@@ -4,6 +4,7 @@ export interface UserAttributes {
   id?: number;
   username: string;
   password: string;
+  elo: number;
 }
 
 export class User
@@ -13,6 +14,7 @@ export class User
   public id!: number;
   public username!: string;
   public password!: string;
+  public elo!: number;
 }
 
 User.init(
@@ -28,6 +30,11 @@ User.init(
     },
     password: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    elo: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1200,
       allowNull: false,
     },
   },

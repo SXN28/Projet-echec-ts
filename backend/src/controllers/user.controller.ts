@@ -31,6 +31,14 @@ export class UserController extends Controller {
     return userService.getUserById(id);
   }
 
+  @Get("/username/{username}")
+  public async getUserByUsername(
+      @Path() username: string,
+  ): Promise<UserOutputDTO> {
+    return userService.getUserByUsername(username);
+  }
+
+
   @Post("/")
   public async createUser(
     @Body() requestBody: UserInputDTO,

@@ -36,7 +36,7 @@ Move.init(
         playerId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'Players',
+                model: 'User',
                 key: 'id',
             },
             allowNull: false,

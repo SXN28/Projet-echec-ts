@@ -24,9 +24,21 @@ export class UserService {
     const newUser = await User.create({
       username,
       password: encodedPassword,
+      elo: 1200,
     });
     return UserMapper.toOutputDto(newUser);
   }
+
+
+  public async getUserByUsername(username: string): Promise<UserOutputDTO> {
+    const user = await User.findOne({ where: { username } });
+    if (user) {
+      return UserMapper.toOutputDto(user);
+    } else {
+      notFound("User");
+    }
+  }
+
 
 
   public async deleteUser(id: number): Promise<void> {
