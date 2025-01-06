@@ -23,6 +23,8 @@ const gameId = inject<Ref<number | null>>("gameId");
 
 const player1 = ref(localStorage.getItem("user1"));
 const player2 = ref(localStorage.getItem("user2"));
+console.log(player1.value + " player1");
+console.log(player2.value + " player2");
 
 onMounted(() => {
   loadBoard();
@@ -143,7 +145,7 @@ watch(gameId, () => {
 <template>
   <div class="chessboard">
     <div class="player player-top-left">
-      <h3>{{ player1 }}</h3>
+      <h3>{{ player2 }}</h3>
     </div>
 
     <div class="board">
@@ -172,7 +174,7 @@ watch(gameId, () => {
     </div>
 
     <div class="player player-bottom-right">
-      <h3>{{ player2 }}</h3>
+      <h3>{{ player1 }}</h3>
     </div>
   </div>
 </template>

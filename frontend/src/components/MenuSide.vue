@@ -16,7 +16,6 @@ const activeMenu = ref("home");
 
 const menus = [
   { id: "replay", label: "Replay", icon: "🏠" },
-  { id: "profile", label: "Profile", icon: "⚙️" },
   { id: "classement", label: "classement", icon: "👤" },
   { id: "logout", label: "Déconnexion", icon: "⏻" },
 ];

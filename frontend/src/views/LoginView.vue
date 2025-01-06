@@ -30,6 +30,7 @@ const handleLogin = async () => {
     // Étape 2 : Définir l'adversaire
     if (isSinglePlayer.value) {
       user2ID = 1;
+      localStorage.setItem("user2", "Guest");
     } else {
       const response2 = await UserService.login(users.user2);
       const token2 = response2.data.token;
