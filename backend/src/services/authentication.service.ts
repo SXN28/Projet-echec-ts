@@ -50,7 +50,7 @@ export class AuthenticationService {
       }
 
       const token = jwt.sign({ username: user.username, permissions: permissions }, JWT_SECRET, {
-        expiresIn: "1h",
+        expiresIn: "12h",
       });
       return token;
     } else {

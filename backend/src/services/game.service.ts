@@ -139,6 +139,38 @@ export class GameService {
         return { board, moves: formattedMoves };
     }
 
+
+
+
+static async getGamesByUsername(username: string): Promise<GameOutputDTO[]> {
+    // Trouver l'utilisateur par son username
+    const user = await User.findOne({ where: { username } });
+
+    if (!user) {
+        throw new Error(`User with username ${username} does not exist.`);
+    }
+
+    // Récupérer les parties où l'utilisateur est impliqué
+    const games = await Game.findAll({
+        where: {
+            [Op.or]: [
+                { whitePlayerId: user.id },
+                { blackPlayerId: user.id },
+            ],
+        },
+    });
+
+    return games.map((game) => ({
+        gameId: game.id,
+        whitePlayerId: game.whitePlayerId,
+        blackPlayerId: game.blackPlayerId,
+        board: game.board,
+        status: game.status,
+        turn: game.turn,
+    }));
+}
+
+
 }
 
 export const gameService = new GameService();

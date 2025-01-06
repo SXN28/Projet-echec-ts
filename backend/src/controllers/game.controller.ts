@@ -48,4 +48,12 @@ export class GameController extends Controller {
     ): Promise<{ board: Array<any>, moves: Array<any> }> {
         return GameService.getGameDetails(gameId);
     }
+
+    @Get("/username/{username}")
+public async getGamesByUsername(
+    @Path() username: string
+): Promise<GameOutputDTO[]> {
+    return GameService.getGamesByUsername(username);
+}
+
 }

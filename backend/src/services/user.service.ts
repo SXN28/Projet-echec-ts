@@ -25,6 +25,7 @@ export class UserService {
       username,
       password: encodedPassword,
       elo: 1200,
+      shareReplays: false,
     });
     return UserMapper.toOutputDto(newUser);
   }
@@ -65,6 +66,25 @@ export class UserService {
       notFound("User");
     }
   }
+
+  public async updateShareReplays(id: number, shareReplays: boolean): Promise<UserOutputDTO> {
+    const user = await User.findByPk(id);
+    if (!user) {
+      notFound("User");
+    }
+    user.shareReplays = shareReplays;
+    await user.save();
+    return UserMapper.toOutputDto(user);
+  }
+
+  public async findById(id: number): Promise<User | null> {
+    return User.findByPk(id);
+  }  
+
+  
+
+  
+
 }
 
 export const userService = new UserService();

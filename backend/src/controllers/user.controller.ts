@@ -16,6 +16,7 @@ import {
   UserInputPatchDTO,
   UserOutputDTO,
 } from "../dto/user.dto";
+import { notFound } from "../error/NotFoundError";
 
 @Route("users")
 @Tags("Users")
@@ -31,12 +32,26 @@ export class UserController extends Controller {
     return userService.getUserById(id);
   }
 
+  
+
   @Get("/username/{username}")
   public async getUserByUsername(
       @Path() username: string,
   ): Promise<UserOutputDTO> {
     return userService.getUserByUsername(username);
   }
+
+  //@Security("jwt")
+  @Get("{id}/share-replays")
+  public async getShareReplays(@Path() id: number): Promise<{ shareReplays: boolean }> {
+    const user = await userService.findById(id);
+    if (!user) {
+      throw notFound("User");
+    }
+    return { shareReplays: user.shareReplays };
+  }
+  
+
 
 
   @Post("/")
@@ -61,4 +76,14 @@ export class UserController extends Controller {
     const { username, password } = requestBody;
     return userService.updateUser(id, username, password);
   }
+
+  @Patch("{id}/share-replays")
+  public async updateShareReplays(
+      @Path() id: number,
+      @Body() body: { shareReplays: boolean }
+  ): Promise<UserOutputDTO> {
+    return userService.updateShareReplays(id, body.shareReplays);
+  }
+  
+
 }
