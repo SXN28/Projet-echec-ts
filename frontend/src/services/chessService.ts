@@ -48,4 +48,9 @@ export const chessService = {
     getGameDetails(gameId: number) {
         return axios.get(`${API_URL}/games/${gameId}/details`).then((response) => response.data);
     },
+    getUserGamesByUsername(username: string) {
+        return axios
+            .get(`${API_URL}/games/username/${username}`)
+            .then((response) => response.data);
+    },
 };

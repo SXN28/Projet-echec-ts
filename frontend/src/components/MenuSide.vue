@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import {ref, onMounted, inject, type Ref} from "vue";
+import { ref, onMounted, inject, type Ref } from "vue";
 import { useRouter } from "vue-router";
 import { chessService } from "@/services/chessService";
+import { UserService } from "@/services/userService";
 
 const router = useRouter();
 
 const user = ref({
   username: localStorage.getItem("user1"),
   rating: 1200,
+  shareReplays: false,
 });
 
 const activeMenu = ref("home");
@@ -22,7 +24,7 @@ const menus = [
 const logout = () => {
   localStorage.clear();
   router.push("/login");
-}
+};
 
 const isMenuActive = (menuId: string) => activeMenu.value === menuId;
 const selectMenu = (menuId: string) => {
@@ -32,7 +34,7 @@ const selectMenu = (menuId: string) => {
     router.push("/replay");
   } else if (menuId === "classement") {
     router.push("/classement");
-  }else {
+  } else {
     activeMenu.value = menuId;
   }
 };
@@ -42,10 +44,22 @@ const currentTurn = inject<Ref<string>>("currentTurn");
 
 const triggerChessboardLoadBoard = inject<() => void>("triggerChessboardLoadBoard");
 
-onMounted(() => {
+onMounted(async () => {
   if (gameId) {
     triggerChessboardLoadBoard!();
     getCurrentTurn();
+  }
+
+  // Mise à jour de `user.shareReplays` au montage du composant
+  const username = user.value.username!;
+  try {
+    const response = await UserService.getID(username);
+    const userId = response.data.id;
+    const response2 = await UserService.getSharedUsers(userId);
+    user.value.shareReplays = response2.data.shareReplays;
+    console.log("Données de partage des replays récupérées :", response2.data.shareReplays);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des données de partage de replays :", error);
   }
 });
 
@@ -89,6 +103,27 @@ async function createNewGame() {
     }
   }
 }
+
+const toggleShareReplays = async () => {
+  try {
+    const currentShareReplays = user.value.shareReplays;
+    const newShareReplays = !currentShareReplays;
+
+    const username = user.value.username!;
+    const response = await UserService.getID(username);
+    const userId = response.data.id;
+
+    await UserService.updateUser(userId, { shareReplays: newShareReplays });
+
+    const response2 = await UserService.getSharedUsers(userId);
+    console.log(response2.data.shareReplays);
+
+    user.value.shareReplays = newShareReplays;
+    console.log("État de partage des replays modifié :", newShareReplays);
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de shareReplays :", error);
+  }
+};
 </script>
 
 <template>
@@ -120,6 +155,15 @@ async function createNewGame() {
         <button class="new-game-btn" @click="createNewGame">🎮 Créer une nouvelle partie</button>
       </div>
       <p class="current-turn">C'est au tour des <strong>{{ currentTurn }}</strong></p>
+      <div class="toggle-replays">
+        <label for="toggle">Partager les replays</label>
+        <input
+            id="toggle"
+            type="checkbox"
+            :checked="user.shareReplays"
+            @change="toggleShareReplays"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -230,6 +274,59 @@ async function createNewGame() {
 }
 
 .current-turn strong {
-  color: #FFD700; /* Doré pour mettre en évidence le tour */
+  color: #FFD700;
+}
+
+.toggle-replays {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+#toggle {
+  appearance: none;
+  width: 50px;
+  height: 25px;
+  background: #ccc;
+  border-radius: 50px;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#toggle:checked {
+  background: linear-gradient(135deg, #4CAF50, #81C784);
+}
+
+#toggle::before {
+  content: '';
+  width: 21px;
+  height: 21px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+#toggle:checked::before {
+  transform: translateX(25px);
+}
+
+.toggle-replays label {
+  font-size: 1em;
+  font-weight: bold;
+  color: #E0E0E0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.toggle-replays label:hover {
+  color: #FFD700;
 }
 </style>

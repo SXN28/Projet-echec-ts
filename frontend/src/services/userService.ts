@@ -2,6 +2,10 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8000";
 
+const getToken = () => {
+    return localStorage.getItem("token1");
+};
+
 export const UserService = {
     login(payload: { username: string; password: string }) {
         return axios.post(`${API_URL}/auth`, {
@@ -29,6 +33,17 @@ export const UserService = {
             );
         }
     },
+    async updateUser(userId: number, payload: { shareReplays?: boolean }) {
+        return axios.patch(`${API_URL}/users/${userId}/share-replays`, payload);
+    },
+
+    getSharedUsers(userId: number) {
+        return axios.get(`${API_URL}/users/${userId}/share-replays`, {
+            headers: {
+                "Authorization": `Bearer ${getToken()}`
+            }
+        });
+    }
 };
 
 
