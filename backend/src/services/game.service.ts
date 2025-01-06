@@ -119,16 +119,13 @@ export class GameService {
             throw new Error(`Game with ID ${gameId} does not exist.`);
         }
 
-        // Désérialisation du plateau de jeu (JSON -> objet JS)
         const board = JSON.parse(game.board);
 
-        // Récupérer les mouvements associés à ce gameId
         const moves = await Move.findAll({
             where: { gameId },
-            order: [["id", "ASC"]], // Tri pour garantir l'ordre des mouvements
+            order: [["id", "ASC"]],
         });
 
-        // Transformer les données pour correspondre au format attendu
         const formattedMoves = moves.map((move) => ({
             fromRow: move.fromRow,
             fromCol: move.fromCol,
@@ -143,14 +140,12 @@ export class GameService {
 
 
 static async getGamesByUsername(username: string): Promise<GameOutputDTO[]> {
-    // Trouver l'utilisateur par son username
     const user = await User.findOne({ where: { username } });
 
     if (!user) {
         throw new Error(`User with username ${username} does not exist.`);
     }
 
-    // Récupérer les parties où l'utilisateur est impliqué
     const games = await Game.findAll({
         where: {
             [Op.or]: [
