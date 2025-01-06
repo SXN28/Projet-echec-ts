@@ -73,7 +73,6 @@ onMounted(() => {
   padding: 20px;
 }
 
-/* En-tête */
 .header h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
@@ -81,7 +80,6 @@ onMounted(() => {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-/* Chargement */
 .loading {
   display: flex;
   flex-direction: column;

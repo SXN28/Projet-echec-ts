@@ -113,11 +113,11 @@ onUpdated(() => {
 }
 
 .move-player.white {
-  background-color: #6c757d; /* Gris neutre pour les joueurs blancs */
+  background-color: #6c757d;
 }
 
 .move-player.black {
-  background-color: #343a40; /* Gris foncé pour les joueurs noirs */
+  background-color: #343a40;
 }
 
 .move-details p {
@@ -126,6 +126,6 @@ onUpdated(() => {
 }
 
 .move-details strong {
-  color: #333; /* Texte en gris foncé */
+  color: #333;
 }
 </style>

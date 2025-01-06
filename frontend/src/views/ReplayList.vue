@@ -4,17 +4,14 @@ import { useRouter } from "vue-router";
 import { chessService } from "@/services/chessService";
 import { UserService } from "@/services/userService";
 
-const games = ref([]); // Parties récupérées
-const users = ref([]); // Liste des utilisateurs
+const games = ref([]);
+const users = ref([]);
 const router = useRouter();
 
-// `username` pour stocker l'utilisateur principal depuis localStorage
 const username = ref(localStorage.getItem("user1") || "");
 
-// `selectedUsername` pour stocker l'utilisateur temporaire sélectionné
 const selectedUsername = ref(username.value);
 
-// Fonction pour récupérer les parties de l'utilisateur sélectionné
 async function fetchGames(selectedUser: string) {
   try {
     console.log("Récupération des parties pour l'utilisateur :", selectedUser);
@@ -24,7 +21,6 @@ async function fetchGames(selectedUser: string) {
       return;
     }
 
-    // Utiliser `getUserGamesByUsername` pour récupérer les parties
     const userGames = await chessService.getUserGamesByUsername(selectedUser);
     console.log("Parties récupérées :", userGames);
     games.value = userGames;
@@ -34,7 +30,6 @@ async function fetchGames(selectedUser: string) {
   }
 }
 
-// Fonction pour récupérer les utilisateurs
 async function fetchUsers() {
   try {
     console.log("Récupération des utilisateurs...");
@@ -65,26 +60,22 @@ async function fetchUsers() {
   }
 }
 
-// Fonction pour ouvrir le replay d'une partie
 function openGameReplay(gameId: number) {
   console.log("Ouverture du replay pour la partie :", gameId);
   router.push({ name: "GameReplay", params: { id: gameId } });
 }
 
-// Fonction pour sélectionner un utilisateur temporairement
 function selectUser(selectedUsernameTemp: string) {
   console.log("Utilisateur temporairement sélectionné :", selectedUsernameTemp);
-  selectedUsername.value = selectedUsernameTemp; // Met à jour la variable réactive
+  selectedUsername.value = selectedUsernameTemp;
 }
 
-// Charger les données au montage
 onMounted(async () => {
   console.log("Chargement initial...");
   await fetchUsers();
   await fetchGames(selectedUsername.value);
 });
 
-// Surveiller les changements de `selectedUsername` pour recharger les parties
 watch(selectedUsername, async (newUsername, oldUsername) => {
   console.log(`Changement de l'utilisateur temporaire : ${oldUsername} -> ${newUsername}`);
   await fetchGames(newUsername);

@@ -49,7 +49,6 @@ onMounted(async () => {
     getCurrentTurn();
   }
 
-  // Mise à jour de `user.shareReplays` au montage du composant
   const username = user.value.username!;
   try {
     const response = await UserService.getID(username);
