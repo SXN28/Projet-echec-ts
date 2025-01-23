@@ -33,3 +33,6 @@ jobs:
         run: npm run lint
     - name: Typecheck with tsc
         run: npx tsc --noEmit
+
+    - name: Build Docker Image
+        run: docker build -t my-backend:latest .
